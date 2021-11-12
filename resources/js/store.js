@@ -12,41 +12,39 @@ const store = new Vuex.Store({
     isLoading: false,
   },
   actions: {
-    GetUser({commit}) {
+    GetUsers({commit}) {
       axios.get('https://randomuser.me/api/?results=5')
         .then(function (res) {
           console.log(res);
           let data = res.data.results;
-          commit('MyMutations');
+          commit('SetLoaded', true);
+          commit('SetIsloading', false);
           commit('SetUserInfo', data);
         })
         .catch(function (error) {
           console.log(error);
         })
     },
-    updateLoading(context, status){
-      context.commit('LOADING', status);
-    },
   },
   mutations: {
-    MyMutations(state) {
-      console.log('MyMutations run!');
-      state.Loaded = true;
+    SetLoaded(state, status) {
+      state.Loaded = status;
     },
-    SetFalse(state) {
-      state.Loaded = false;
+    SetIsloading(state, status) {
+      state.isLoading = status;
     },
     SetUserInfo(state, payload) {
       state.users = payload;
     },
-    LOADING(state, status) {
-			state.isLoading = status;
-		},
   },
   getters: {
     maleData(state) {
       return state.users.filter(item => item.gender == 'male');
-    }
+    },
+    femaleData(state) {
+      return state.users.filter(item => item.gender == 'female');
+    },
+
   },
 })
 export default store;

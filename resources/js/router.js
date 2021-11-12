@@ -5,7 +5,6 @@ import Router from 'vue-router';
 // 引用頁面的 Component
 import home from './components/Home.vue';
 import users from './components/Users.vue';
-import loading from './components/Loading.vue';
 
 // 使用 Vue Router
 Vue.use(Router);
@@ -14,7 +13,6 @@ Vue.use(Router);
 export const routes = [
   { path: '/home', component: home, name:'home'},
   { path: '/users', component: users, name: 'users'},
-  { path: '/loading', component: loading, name: 'loading'},
   { path: '*', redirect: '/home' },
 ];
 
