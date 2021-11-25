@@ -27,18 +27,21 @@ window.Vue = require('vue').default;
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
- import Vue from 'vue';
- import router from './router.js';
- import axios from 'axios';
- import VueAxios from 'vue-axios';
- import store from './store';
+import Vue from 'vue';
+import router from './router.js';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import store from './store';
 
 // Import component
 import Loading from 'vue-loading-overlay';
 // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
 
+import draggable from 'vuedraggable';
+
 Vue.component('Loading', Loading);
+Vue.component('draggable', draggable);
 Vue.use(VueAxios, axios);
 
 export default new Vue({

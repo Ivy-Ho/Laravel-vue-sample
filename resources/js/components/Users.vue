@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters} from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   mounted() {
     this.$store.commit("SetIsloading", true);
