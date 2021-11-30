@@ -3,11 +3,11 @@
     <h3>Drag</h3>
     <form class="mb-2 row">
       <div class="mb-3 col-6">
-        <label for="name" class="form-label">name</label>
+        <label for="name" class="form-label">Name</label>
         <input v-model="newData.name" class="form-control" type="text" id="name">
       </div>
       <div class="mb-3 col-6">
-        <label for="text" class="form-label">text</label>
+        <label for="text" class="form-label">Text</label>
         <input v-model="newData.text" class="form-control" type="text" id="text">
       </div>
     </form>
@@ -25,8 +25,8 @@
           <th class="col-2"></th>
         </tr>
       </thead>
-      <draggable tag="tbody" :list="list" handle=".handle" @change="isDragged">
-        <tr v-for="(item, idx) in list" :key="item.name" class="align-items-center" height="65px">
+      <draggable tag="tbody" :list="display" handle=".handle" @change="isDragged">
+        <tr v-for="(item, idx) in display" :key="item.id" class="align-items-center" height="65px">
           <td class="col-2 align-middle">
             <font-awesome-icon :icon="['fas', 'bars']" class="handle"/>
           </td>
@@ -48,13 +48,23 @@
       </draggable>
     </table>
 
+    <pagination
+      @updatePageNum="filterByPageNum"
+      :pageNum="pageNum"
+      :totalPageCount="totalPageCount">
+    </pagination>
     <loading :active.sync="isLoading"></loading>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import pagination from "../components/Pagination.vue"
+let id = 3;
 export default {
+  components: {
+    pagination
+  },
   data() {
     return {
       list: [
@@ -63,25 +73,74 @@ export default {
         { name: "Cindy", text: "789", id: 2},
         { name: "Debby", text: "1010", id: 3}
       ],
+      display: [],
       newData: {},
       cacheData: {}, 
       editedData: {},
+      // 單一頁面資料列總數
+      rowsPerPage: 3,
+      // 現在指向的分頁頁數 
+      pageNum: 1,
+      totalPageCount: 0,
     }
   },
   computed: {
     ...mapState(["isLoading"]),
   },
   methods: {
-    removeItem(idx) {
-      this.list.splice(idx, 1);
+    countTotalPage() {
+      this.totalPageCount = Math.ceil( this.list.length / this.rowsPerPage);
+    },
+    getDisplayData( num=1 ) {
+      this.display = this.list.slice(this.rowsPerPage * (num - 1), this.rowsPerPage * num);
     },
     addItem() {
+      id += 1;
       this.list.push({
         name: this.newData.name,
         text: this.newData.text,
-        id: this.list.length
+        id: id
       });
       this.newData = {};
+      this.countTotalPage();
+      if (this.display.length === this.rowsPerPage) {
+        this.filterByPageNum(this.totalPageCount);
+      }else {
+        this.getDisplayData(this.pageNum);
+      }
+      this.$swal({
+        position: 'center',
+        icon: 'success',
+        title: 'Saved!',
+        showConfirmButton: false,
+        timer: 1000
+      })
+    },
+    removeItem(idx) {
+      this.$swal({
+        title: 'Are you sure you want to delete this?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.list.splice(idx, 1);
+          this.countTotalPage();
+          this.getDisplayData(this.pageNum);
+          if(this.display.length <= 0) {
+            this.filterByPageNum(this.pageNum-1);
+          }
+          this.$swal({
+            position: 'center',
+            icon: 'success',
+            title: 'Deleted!',
+            showConfirmButton: false,
+            timer: 1000
+          })
+        }
+      })
     },
     editItem(item, idx) {
       if(item.id !== this.cacheData.id) {
@@ -89,16 +148,30 @@ export default {
         this.editedData = item;
       }else if(item.id === this.cacheData.id) {
         this.list.splice(idx, this.editedData);
-        console.log(this.list);
         this.editedData = {name: '', text: '', id: 0,};
         this.cacheData = {};
+        this.$swal({
+          position: 'center',
+          icon: 'success',
+          title: 'Saved!',
+          showConfirmButton: false,
+          timer: 1000
+        })
       }
     },
     isDragged() {
       this.$store.commit("SetIsloading", true);
       setTimeout(() => {this.$store.commit("SetIsloading", false);}, 500);
-    }
+    },
+    filterByPageNum(num) {
+      this.pageNum = num;
+      this.getDisplayData(num);
+    },
   },
+  mounted() {
+    this.countTotalPage();
+    this.getDisplayData();
+  }
 }
 </script>
 

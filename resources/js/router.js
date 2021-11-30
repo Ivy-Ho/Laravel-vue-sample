@@ -3,9 +3,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 // 引用頁面的 Component
-import home from './components/Home.vue';
-import users from './components/Users.vue';
-import drag from './components/Drag.vue';
+import home from './views/Home.vue';
+import users from './views/Users.vue';
+import drag from './views/Drag.vue';
 
 // 使用 Vue Router
 Vue.use(Router);
