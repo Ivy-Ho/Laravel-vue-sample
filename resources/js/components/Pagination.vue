@@ -18,11 +18,6 @@
 <script>
   export default {
     name: 'pagination',
-    data() {
-      return {
-        currentPageNum: this.pageNum,
-      }
-    },
     props: {
       // 現在指向的分頁頁數
       pageNum: {
@@ -32,6 +27,11 @@
       // 資料頁數的總數 (資料總數/單頁資料筆數)
       totalPageCount: {
         type: Number,
+      }
+    },
+    computed: {
+      currentPageNum() {
+        return this.pageNum;
       }
     },
     methods: {
