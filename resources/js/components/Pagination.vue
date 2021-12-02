@@ -30,8 +30,13 @@
       }
     },
     computed: {
-      currentPageNum() {
-        return this.pageNum;
+      currentPageNum: {
+        get() {
+          return this.pageNum;
+        },
+        set(newPageNum) {
+          return newPageNum;
+        }
       }
     },
     methods: {

@@ -32,11 +32,11 @@
           </td>
           <td class="col-3 align-middle">
             <span v-if="item.id !== cacheData.id" class="text">{{ item.name }}</span>
-            <input v-if="item.id === cacheData.id" type="text" autoFocus class="form-control" v-model="editedData.name">
+            <input v-if="item.id === cacheData.id" type="text" autoFocus class="form-control" v-model="editedData.name" @keyup.enter="editItem(item, idx)">
           </td>
           <td class="col-3 align-middle">
             <span v-if="item.id !== cacheData.id" class="text">{{ item.text }}</span>
-            <input v-if="item.id === cacheData.id" type="text" class="form-control" v-model="editedData.text">
+            <input v-if="item.id === cacheData.id" type="text" class="form-control" v-model="editedData.text" @keyup.enter="editItem(item, idx)">
           </td>
           <td class="col-2 align-middle">
             <font-awesome-icon :icon="['far', 'edit']" class="edit" @click="editItem(item, idx)"/>
@@ -158,6 +158,7 @@ export default {
           timer: 1000
         })
       }
+      console.log(item.id == this.cacheData.id);
     },
     isDragged() {
       this.$store.commit("SetIsloading", true);
