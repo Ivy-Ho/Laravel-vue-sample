@@ -96,22 +96,34 @@ export default {
     },
     addItem() {
       id += 1;
-      this.list.push({
-        name: this.newData.name,
-        text: this.newData.text,
-        id: id
-      });
-      this.newData = {};
-      this.countTotalPage();
-      if (this.display.length === this.rowsPerPage) {
-        this.filterByPageNum(this.totalPageCount);
+      let title = '';
+      let icon = '';
+      if(this.newData.name === undefined) {
+        title = 'Name required!';
+        icon = 'error';
+      }else if(this.newData.text === undefined) {
+        title = 'Text required!';
+        icon = 'error'
       }else {
-        this.getDisplayData(this.pageNum);
+        this.list.push({
+          name: this.newData.name,
+          text: this.newData.text,
+          id: id
+        });
+        this.newData = {};
+        this.countTotalPage();
+        if (this.display.length === this.rowsPerPage) {
+          this.filterByPageNum(this.totalPageCount);
+        }else {
+          this.getDisplayData(this.pageNum);
+        }
+        title = 'Saved!'
+        icon = 'success'
       }
       this.$swal({
         position: 'center',
-        icon: 'success',
-        title: 'Saved!',
+        icon: icon,
+        title: title,
         showConfirmButton: false,
         timer: 1000
       })
